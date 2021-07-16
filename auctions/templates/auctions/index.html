@@ -1,0 +1,24 @@
+<!-- layout, on every page the same -->
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Active Listings</h2>
+    
+        <!-- all active listings -->
+        {% for listing in listings %}
+            <div class="card bg-light mb-3" style="margin-bottom: 20px;">
+                <div class="row">
+                    <img class="card-img-top col-1" src="{{ listing.image_link }}" alt="Product" style="width:22%;" >
+                    <div class="card-body col-6">
+                        <h4 class="card-title"><b>{{listing}}</b></h4> 
+                        <p class="card-text">{{listing.description}}</p> 
+                        <p>Current bid: <b>{{listing.start_value}} EUR</b></p> 
+                        <a href="{% url 'view_listing' listing.id%}" class="btn btn-primary" style="width: 20%;" >See listings page</a>
+                    </div>
+                </div>
+            </div>
+       
+        {% endfor %}
+
+{% endblock %}

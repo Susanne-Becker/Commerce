@@ -1,0 +1,88 @@
+<!-- layout page , on every page the same -->
+{% extends "auctions/layout.html" %}
+
+<!-- title of page -->
+{% block title %}
+	    {{listing.title}}
+{% endblock %}
+
+{% block body %}
+<div class="container row">
+	<!-- first colomn of row, image -->
+    <div class="col-md">
+    	<img src="{{listing.image_link}}" alt="" width="50%">
+    </div>
+	<!-- second colomn of row, information -->
+    <div class="col-md">
+		<h2><b>{{listing.title}}</b></h2>
+		<p>{{listing.description}}</p>
+        <br>
+		
+		<!-- show user current bid -->
+		{% if new_value %}
+        	<p>Current bid: <b>{{new_value}} EURO</b></p> 
+		{% else %}
+        	<p>Current bid: <b>{{listing.start_value}} EURO</b></p> 
+		{% endif %}
+
+        <br>
+		<!-- if user logged in, show this information -->
+		{% if user.is_authenticated %}
+
+			<!-- listing closed -->
+			{% if listing.active == 1 %}
+				<p> The winner of the listing is {{listing.winner}} </p>
+			
+				<!-- user who created listing can close listing -->
+			{% elif user.get_username == listing.user.username %}
+				<a  href="{% url 'close_auction' listing.id %}">Close Listing</a>
+			{% endif %}
+
+			<!-- listing open -->
+			{% if listing.active == 0 %}
+
+				<!-- remove and add from watchlist -->
+				{% if listing.watchlist == 1 %}
+					<a  href="{% url 'remove_watchlist' listing.id %}">Remove from Watchlist</a>
+				{% else %}
+					<a  href="{% url 'add_watchlist' listing.id %}">Add to Watchlist</a>
+				{% endif %}
+
+				<!-- show all comments for that item -->
+				{% if comments %}
+					<h3>Comments:</h3>
+				{% endif %}
+				{% for user_comment in comments %}
+					<div class="row align-middle m-3">
+						<p><b> {{user_comment.user.username}}:</b> {{user_comment.comment}}</p>
+					</div>
+				{% endfor %}
+				
+				<!-- form to place bids -->
+				<h3>Place a bid:</h3>
+				<form action="{% url 'view_listing' listing.id%}" method="POST">
+					{% csrf_token %}            
+					{{form_bid}}
+					<button class="btn btn-primary" style="margin-top: 20px;" type="submit">Bid</button>
+					<input type="hidden" name="item_id" value="{{listing.id}}">
+				</form>
+
+				<!-- form to place comments -->
+				<h3>Add comment:</h3>
+				<form action="{% url 'view_listing' listing.id%}" method="POST">
+					{% csrf_token %}            
+					{{form_comment}}
+					<button class="btn btn-primary" style="margin-top: 20px;" type="submit">Comment</button>
+					<input type="hidden" name="item_id" value="{{listing.id}}">
+				</form>
+			{% endif %}
+		{% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+

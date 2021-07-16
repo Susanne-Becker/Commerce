@@ -1,0 +1,15 @@
+<!-- layout page , on every page the same -->
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+	<!-- create new listing form -->
+	<h2>Create Listing</h2>
+	<form action="{% url 'add_listing' %}"  method="post">
+		{% csrf_token %}
+		<div class="form-group w-50">
+		{{form}}
+		</div>
+	<input class="btn btn-primary" type="submit" value="Save" style="margin-top: 20px;">
+	</form>
+{% endblock %}
+

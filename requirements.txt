@@ -1,0 +1,5 @@
+Gunicorn
+Django
+django-dbfiles
+django-on-heroku
+Pillow
